@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../includes/head') %>
+  
+  <body class="min-h-screen bg-zinc-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../includes/sidebar') %>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <%- include('../includes/header') %>
+
+        <!-- Page content -->
+        <main class="flex-1 p-6">
+          <div class="max-w-7xl mx-auto">
+            <!-- Page header -->
+            <div class="mb-6">
+              <% if (locals.success) { %>
+                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= success %></span>
+                </div>
+              <% } %>
+              <% if (locals.error) { %>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= error %></span>
+                </div>
+              <% } %>
+              <h1 class="text-2xl font-bold text-zinc-100">Greeting Settings</h1>
+              <nav class="flex mt-2 space-x-2 text-sm">
+                <a href="/" class="text-zinc-400 hover:text-zinc-300">
+                  <i class="fa fa-home"></i>
+                  <span class="ml-1">Selector</span>
+                </a>
+                <span class="text-zinc-600">/</span>
+                <a href="<%=`/manage/${guild.id}/`%>" class="text-zinc-400 hover:text-zinc-300">
+                  <%=guild.name%>
+                </a>
+                <span class="text-zinc-600">/</span>
+                <span class="text-zinc-300">Greeting</span>
+              </nav>
+            </div>
+
+            <!-- Content grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Left column -->
+              <div>
+                <!-- Welcome Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-zinc-100">Welcome Embed</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/greeting" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Content -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Content</label>
+                        <textarea 
+                          rows="3" 
+                          name="content" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="Welcome to the server {member:name} 🎉"
+                        ><%- guild.welcome.content?.replaceAll(/\\n/g, '&#10;') || '' %></textarea>
+                      </div>
+
+                      <!-- Description -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Description</label>
+                        <textarea 
+                          rows="3" 
+                          name="description" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        ><%- guild.welcome.embed.description?.replaceAll(/\\n/g, '&#10;') || '' %></textarea>
+                      </div>
+
+                      <!-- Footer -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Footer</label>
+                        <input 
+                          type="text" 
+                          name="footer" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          value="<%= guild.welcome.embed.footer %>"
+                        >
+                      </div>
+
+                      <!-- Hex Color -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Hex Color</label>
+                        <input 
+                          type="text" 
+                          name="hexcolor" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          value="<%= guild.welcome.embed.color %>"
+                        >
+                      </div>
+
+                      <!-- Image URL -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Image URL</label>
+                        <input 
+                          type="text" 
+                          name="image" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          value="<%= guild.welcome.embed.image %>"
+                        >
+                      </div>
+
+                      <!-- Channel -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Channel</label>
+                        <select 
+                          name="channel"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <% if(bot.channels.cache.has(guild.welcome.channel)){ %>
+                            <option selected value="<%= guild.welcome.channel %>">#<%= bot.channels.cache.get(guild.welcome.channel).name %></option>
+                            <% guild.channels.cache.filter((ch) => ch.id !== guild.welcome.channel && ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } else { %>
+                            <option disabled selected value=""> -- select an option -- </option>
+                            <% guild.channels.cache.filter((ch) => ch.id !== guild.channels.cache.first().id && ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } %>
+                        </select>
+                      </div>
+
+                      <!-- Thumbnail -->
+                      <div>
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="thumbnail"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.welcome.embed.thumbnail ? 'checked' : '' %>
+                          >
+                          <span class="text-zinc-300">Show Thumbnail</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700 flex justify-between">
+                      <% if(guild.welcome.enabled){ %>
+                        <button 
+                          type="submit" 
+                          name="welcomeDisable"
+                          class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-md transition-colors"
+                        >
+                          Disable Messages
+                        </button>
+                        <button 
+                          type="submit" 
+                          name="welcomeUpdate"
+                          class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                        >
+                          Update Settings
+                        </button>
+                      <% } else { %>
+                        <button 
+                          type="submit" 
+                          name="welcomeEnable"
+                          class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                        >
+                          Enable Messages
+                        </button>
+                      <% } %>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Right column -->
+              <div>
+                <!-- Farewell Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-zinc-100">Farewell Configuration</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/greeting" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Content -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Content</label>
+                        <textarea 
+                          rows="3" 
+                          name="content" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="{member:tag} has left the server 👋"
+                        ><%- guild.farewell.content?.replaceAll(/\\n/g, '&#10;') || '' %></textarea>
+                      </div>
+
+                      <!-- Description -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Description</label>
+                        <textarea 
+                          rows="3" 
+                          name="description" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        ><%- guild.farewell.embed.description?.replaceAll(/\\n/g, '&#10;') || '' %></textarea>
+                      </div>
+
+                      <!-- Footer -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Footer</label>
+                        <input 
+                          type="text" 
+                          name="footer" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          value="<%= guild.farewell.embed.footer %>"
+                        >
+                      </div>
+
+                      <!-- Hex Color -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Hex Color</label>
+                        <input 
+                          type="text" 
+                          name="hexcolor" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          value="<%= guild.farewell.embed.color %>"
+                        >
+                      </div>
+
+                      <!-- Image URL -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Image URL</label>
+                        <input 
+                          type="text" 
+                          name="image" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          value="<%= guild.farewell.embed.image %>"
+                        >
+                      </div>
+
+                      <!-- Channel -->
+                      <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1">Channel</label>
+                        <select 
+                          name="channel"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <% if(bot.channels.cache.has(guild.farewell.channel)){ %>
+                            <option selected value="<%= guild.farewell.channel %>">#<%= bot.channels.cache.get(guild.farewell.channel).name %></option>
+                            <% guild.channels.cache.filter((ch) => ch.id !== guild.farewell.channel && ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } else { %>
+                            <option disabled selected value=""> -- select an option -- </option>
+                            <% guild.channels.cache.filter((ch) => ch.id !== guild.channels.cache.first().id && ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } %>
+                        </select>
+                      </div>
+
+                      <!-- Thumbnail -->
+                      <div>
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="thumbnail"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.farewell.embed.thumbnail ? 'checked' : '' %>
+                          >
+                          <span class="text-zinc-300">Show Thumbnail</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700 flex justify-between">
+                      <% if(guild.farewell.enabled){ %>
+                        <button 
+                          type="submit" 
+                          name="farewellDisable"
+                          class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-md transition-colors"
+                        >
+                          Disable Messages
+                        </button>
+                        <button 
+                          type="submit" 
+                          name="farewellUpdate"
+                          class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                        >
+                          Update Settings
+                        </button>
+                      <% } else { %>
+                        <button 
+                          type="submit" 
+                          name="farewellEnable"
+                          class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                        >
+                          Enable Messages
+                        </button>
+                      <% } %>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <%- include('../includes/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

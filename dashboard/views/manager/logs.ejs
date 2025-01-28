@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../includes/head') %>
+  
+  <body class="min-h-screen bg-zinc-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../includes/sidebar') %>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <%- include('../includes/header') %>
+
+        <!-- Page content -->
+        <main class="flex-1 p-6">
+          <div class="max-w-7xl mx-auto">
+            <!-- Page header -->
+            <div class="mb-6">
+              <% if (locals.success) { %>
+                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= success %></span>
+                </div>
+              <% } %>
+              <% if (locals.error) { %>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= error %></span>
+                </div>
+              <% } %>
+              <h1 class="text-2xl font-bold text-white">Logs Configuration</h1>
+              <nav class="flex mt-2 space-x-2 text-sm">
+                <a href="/" class="text-white hover:text-white">
+                  <i class="fa fa-home"></i>
+                  <span class="ml-1">Selector</span>
+                </a>
+                <span class="text-white">/</span>
+                <a href="<%=`/manage/${guild.id}/`%>" class="text-white hover:text-white">
+                  <%=guild.name%>
+                </a>
+                <span class="text-white">/</span>
+                <span class="text-white">Logs</span>
+              </nav>
+            </div>
+
+            <!-- Log Settings -->
+            <div class="grid grid-cols-1 gap-6">
+              <!-- Moderation Logs -->
+              <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-zinc-700 px-4 py-3">
+                  <h3 class="text-lg font-medium text-white">Moderation Logs</h3>
+                </div>
+                <form action="/manage/<%= guild.id %>/logs" method="POST">
+                  <div class="p-4 space-y-4">
+                    <!-- Channel Selection -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Log Channel</label>
+                      <select 
+                        name="modlog_channel"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      >
+                        <option disabled selected value=""> -- select a channel -- </option>
+                        <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                          <option 
+                            value="<%= ch.id %>"
+                            <%= guild.modlog_channel === ch.id ? 'selected' : '' %>
+                          >
+                            #<%= ch.name %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+
+                    <!-- Event Types -->
+                    <div class="space-y-3">
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_bans"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.bans ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Ban Events</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_kicks"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.kicks ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Kick Events</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_warns"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.warns ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Warning Events</span>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Message Logs -->
+              <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-zinc-700 px-4 py-3">
+                  <h3 class="text-lg font-medium text-white">Message Logs</h3>
+                </div>
+                <form action="/manage/<%= guild.id %>/logs" method="POST">
+                  <div class="p-4 space-y-4">
+                    <!-- Channel Selection -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Log Channel</label>
+                      <select 
+                        name="msglog_channel"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      >
+                        <option disabled selected value=""> -- select a channel -- </option>
+                        <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                          <option 
+                            value="<%= ch.id %>"
+                            <%= guild.msglog_channel === ch.id ? 'selected' : '' %>
+                          >
+                            #<%= ch.name %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+
+                    <!-- Event Types -->
+                    <div class="space-y-3">
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_deletes"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.deletes ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Message Deletions</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_edits"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.edits ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Message Edits</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_bulk_deletes"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.bulk_deletes ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Bulk Message Deletions</span>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Member Logs -->
+              <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-zinc-700 px-4 py-3">
+                  <h3 class="text-lg font-medium text-white">Member Logs</h3>
+                </div>
+                <form action="/manage/<%= guild.id %>/logs" method="POST">
+                  <div class="p-4 space-y-4">
+                    <!-- Channel Selection -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Log Channel</label>
+                      <select 
+                        name="memberlog_channel"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      >
+                        <option disabled selected value=""> -- select a channel -- </option>
+                        <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                          <option 
+                            value="<%= ch.id %>"
+                            <%= guild.memberlog_channel === ch.id ? 'selected' : '' %>
+                          >
+                            #<%= ch.name %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+
+                    <!-- Event Types -->
+                    <div class="space-y-3">
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_joins"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.joins ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Member Joins</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_leaves"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.leaves ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Member Leaves</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_nicknames"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.nicknames ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Nickname Changes</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="log_roles"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.logs?.roles ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Role Changes</span>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Update Button -->
+              <div class="flex justify-end">
+                <button 
+                  type="submit"
+                  class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                >
+                  Update Log Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <%- include('../includes/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

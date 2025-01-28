@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <%- include('includes/head') %>
+
+  <body class="min-h-screen bg-zinc-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <%- include('includes/sidebar') %>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <%- include('includes/header') %>
+
+        <!-- Page content -->
+        <main class="flex-1 p-6">
+          <div class="max-w-7xl mx-auto">
+            <div class="mb-6">
+              <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                Selector <span class="text-sm text-white font-normal">Version 1.0.0-beta</span>
+              </h1>
+              <nav class="text-sm mt-2">
+                <a href="/" class="text-white hover:text-white flex items-center gap-2">
+                  <i class="fa fa-home"></i>Selector
+                </a>
+              </nav>
+            </div>
+
+            <div id="server-grid" 
+              data-servers="<%= encodeURIComponent(JSON.stringify(user.displayedGuilds || [])) %>">
+              <% if(!user.displayedGuilds) { %>
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-white">No server found</h3>
+                  </div>
+                  <div class="p-4">
+                    <p class="text-white">
+                      No server to display. Make sure you are logged in with the right account and try again
+                    </p>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <%- include('includes/footer') %>
+      </div>
+    </div>
+
+    <!-- React Components -->
+    <script src="/js/components/ServerCard.js"></script>
+  </body>
+</html>

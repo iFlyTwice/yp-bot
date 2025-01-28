@@ -1,0 +1,17 @@
+{
+  "watch": [
+    "src/**/*",
+    "bot.js",
+    "config.js"
+  ],
+  "ignore": [
+    "node_modules/**/*",
+    ".git/**/*",
+    "docs/**/*",
+    "dashboard/**/*",
+    "logs/**/*",
+    "scripts/**/*"
+  ],
+  "delay": "1000",
+  "ext": "js,json"
+}

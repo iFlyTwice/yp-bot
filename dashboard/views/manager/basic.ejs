@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../includes/head') %>
+  
+  <body class="min-h-screen bg-zinc-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../includes/sidebar') %>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <%- include('../includes/header') %>
+
+        <!-- Page content -->
+        <main class="flex-1 p-6">
+          <div class="max-w-7xl mx-auto">
+            <!-- Page header -->
+            <div class="mb-6">
+              <% if (locals.success) { %>
+                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= success %></span>
+                </div>
+              <% } %>
+              <% if (locals.error) { %>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= error %></span>
+                </div>
+              <% } %>
+              <h1 class="text-2xl font-bold text-white">Basic Settings</h1>
+              <nav class="flex mt-2 space-x-2 text-sm">
+                <a href="/" class="text-white hover:text-white">
+                  <i class="fa fa-home"></i>
+                  <span class="ml-1">Selector</span>
+                </a>
+                <span class="text-white">/</span>
+                <a href="<%=`/manage/${guild.id}/`%>" class="text-white hover:text-white">
+                  <%=guild.name%>
+                </a>
+                <span class="text-white">/</span>
+                <span class="text-white">Basic</span>
+              </nav>
+            </div>
+
+            <!-- Content grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Left column -->
+              <div class="space-y-6">
+                <!-- General Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-white">General</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/basic/" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Prefix -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Prefix</label>
+                        <input 
+                          type="text" 
+                          name="prefix" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="<%= guild.prefix %>"
+                        >
+                      </div>
+                      
+                      <!-- Checkboxes -->
+                      <div class="space-y-3">
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="flag_translation"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.flag_translation?.enabled ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Flag Translation</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="invite_tracking"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.invite.tracking ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Invite Tracking</span>
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700">
+                      <button 
+                        type="submit" 
+                        name="basicUpdate"
+                        class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                      >
+                        Update Settings
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Statistics Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-white">Statistics</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/basic/" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Tracking Checkbox -->
+                      <div>
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="ranking"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.stats.enabled ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Enable Tracking</span>
+                        </label>
+                      </div>
+
+                      <!-- Levelup Message -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Levelup Message</label>
+                        <input 
+                          type="text" 
+                          name="levelup_message" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="<%= guild.stats.xp.message %>"
+                        >
+                      </div>
+
+                      <!-- Levelup Channel -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Levelup Channel</label>
+                        <select 
+                          name="levelup_channel"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <% if(guild.stats.xp.channel && bot.channels.cache.has(guild.stats.xp.channel)){ %>
+                            <option selected value="<%= guild.stats.xp.channel %>">#<%= bot.channels.cache.get(guild.stats.xp.channel).name %></option>
+                            <% guild.channels.cache.filter((ch) => ch.type === 0 && ch.id !== guild.stats.xp.channel).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                            <option value="">No channel</option>
+                          <% } else { %>
+                            <option disabled selected value=""> -- select an option -- </option>
+                            <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700">
+                      <button 
+                        type="submit" 
+                        name="statsUpdate"
+                        class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                      >
+                        Update Statistics
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Ticket Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-white">Ticket Settings</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/basic/" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Ticket Limit -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Ticket Limit</label>
+                        <input 
+                          type="number" 
+                          name="limit" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="<%= guild.ticket.limit %>"
+                        >
+                      </div>
+
+                      <!-- Ticket Logs Channel -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Ticket Logs Channel</label>
+                        <select 
+                          name="channel"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <% if(guild.ticket.log_channel && bot.channels.cache.has(guild.ticket.log_channel)){ %>
+                            <option selected value="<%= guild.ticket.log_channel %>">#<%= bot.channels.cache.get(guild.ticket.log_channel).name %></option>
+                            <% guild.channels.cache.filter((ch) => ch.type === 0 && ch.id !== guild.ticket.log_channel).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                            <option value="">No channel</option>
+                          <% } else { %>
+                            <option disabled selected value=""> -- select an option -- </option>
+                            <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700">
+                      <button 
+                        type="submit" 
+                        name="ticketUpdate"
+                        class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                      >
+                        Update Ticket Settings
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Right column -->
+              <div class="space-y-6">
+                <!-- Moderation Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-white">Moderation Settings</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/basic/" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Max Warnings -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Max Warnings</label>
+                        <input 
+                          type="number" 
+                          name="max_warnings" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="<%= guild.max_warn.limit %>"
+                        >
+                      </div>
+
+                      <!-- Max Warnings Action -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Max Warnings Action</label>
+                        <select 
+                          name="max_warn_action"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <option selected value="<%= guild.max_warn.action %>"><%= guild.max_warn.action %></option>
+                          <% if(guild.max_warn.action !== "TIMEOUT") { %>
+                            <option value="TIMEOUT">TIMEOUT</option>
+                          <% } %>
+                          <% if(guild.max_warn.action !== "KICK") { %>
+                            <option value="KICK">KICK</option>
+                          <% } %>
+                          <% if(guild.max_warn.action !== "BAN") { %>
+                            <option value="BAN">BAN</option>
+                          <% } %>
+                        </select>
+                      </div>
+
+                      <!-- Moderation Logs Channel -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Moderation Logs Channel</label>
+                        <select 
+                          name="modlog_channel"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <% if(guild.modlog_channel && bot.channels.cache.has(guild.modlog_channel)){ %>
+                            <option selected value="<%= guild.modlog_channel %>">#<%= bot.channels.cache.get(guild.modlog_channel).name %></option>
+                            <% guild.channels.cache.filter((ch) => ch.type === 0 && ch.id !== guild.modlog_channel).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                            <option value="">No channel</option>
+                          <% } else { %>
+                            <option disabled selected value=""> -- select an option -- </option>
+                            <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                              <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                          <% } %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700">
+                      <button 
+                        type="submit" 
+                        name="modUpdate"
+                        class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                      >
+                        Update Moderation Settings
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Automod Settings -->
+                <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                  <div class="border-b border-zinc-700 px-4 py-3">
+                    <h3 class="text-lg font-medium text-white">Auto Moderation</h3>
+                  </div>
+                  <form action="/manage/<%= guild.id %>/basic/" method="POST">
+                    <div class="p-4 space-y-4">
+                      <!-- Max Strikes -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Max Strikes</label>
+                        <input 
+                          type="number" 
+                          name="max_strikes" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="<%= guild.automod.strikes %>"
+                        >
+                      </div>
+
+                      <!-- Max Strikes Action -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Max Strikes Action</label>
+                        <select 
+                          name="automod_action"
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <option selected value="<%= guild.automod.action %>"><%= guild.automod.action %></option>
+                          <% if(guild.automod.action !== "TIMEOUT") { %>
+                            <option value="TIMEOUT">TIMEOUT</option>
+                          <% } %>
+                          <% if(guild.automod.action !== "KICK") { %>
+                            <option value="KICK">KICK</option>
+                          <% } %>
+                          <% if(guild.automod.action !== "BAN") { %>
+                            <option value="BAN">BAN</option>
+                          <% } %>
+                        </select>
+                      </div>
+
+                      <!-- Max Lines -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Max Lines</label>
+                        <input 
+                          type="number" 
+                          name="max_lines" 
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          placeholder="<%= guild.automod.max_lines %>"
+                        >
+                      </div>
+
+                      <!-- Anti Features -->
+                      <div class="space-y-3">
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="anti_attachments"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.automod.anti_attachments ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Anti Attachments</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="anti_invites"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.automod.anti_invites ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Anti Invites</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="anti_links"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.automod.anti_links ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Anti Links</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="anti_spam"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.automod.anti_spam ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Anti Spam</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="anti_ghostping"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.automod.anti_ghostping ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Anti Ghostping</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                          <input 
+                            type="checkbox" 
+                            name="anti_massmention"
+                            class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                            <%= guild.automod.anti_massmention ? 'checked' : '' %>
+                          >
+                          <span class="text-white">Anti Massmention</span>
+                        </label>
+                      </div>
+
+                      <!-- Whitelisted Channels -->
+                      <div>
+                        <label class="block text-sm font-medium text-white mb-1">Whitelisted Channels</label>
+                        <select 
+                          name="channels"
+                          multiple
+                          class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        >
+                          <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                            <option 
+                              value="<%= ch.id %>"
+                              <%= guild.automod.wh_channels.includes(ch.id) ? 'selected' : '' %>
+                            >
+                              #<%= ch.name %>
+                            </option>
+                          <% }); %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="bg-zinc-800/50 px-4 py-3 border-t border-zinc-700">
+                      <button 
+                        type="submit" 
+                        name="automodUpdate"
+                        class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                      >
+                        Update Automod Settings
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <%- include('../includes/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

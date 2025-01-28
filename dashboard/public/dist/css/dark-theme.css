@@ -1,0 +1,164 @@
+:root {
+  --zinc-50: #fafafa;
+  --zinc-100: #f4f4f5;
+  --zinc-200: #e4e4e7;
+  --zinc-300: #d4d4d8;
+  --zinc-400: #a1a1aa;
+  --zinc-500: #71717a;
+  --zinc-600: #52525b;
+  --zinc-700: #3f3f46;
+  --zinc-800: #27272a;
+  --zinc-900: #18181b;
+  --zinc-950: #09090b;
+}
+
+/* Dark theme base styles */
+body {
+  background-color: var(--zinc-900);
+  color: var(--zinc-100);
+}
+
+/* Navbar styling */
+.main-header {
+  background-color: var(--zinc-800) !important;
+  border-bottom: 1px solid var(--zinc-700);
+}
+
+.main-header .navbar {
+  background-color: var(--zinc-800);
+}
+
+.navbar-nav > li > a {
+  color: var(--zinc-200) !important;
+}
+
+/* Sidebar styling */
+.main-sidebar {
+  background-color: var(--zinc-800) !important;
+}
+
+.sidebar-menu > li > a {
+  color: var(--zinc-300);
+}
+
+.sidebar-menu > li:hover > a,
+.sidebar-menu > li.active > a {
+  background-color: var(--zinc-700);
+  color: var(--zinc-50);
+}
+
+/* Content styling */
+.content-wrapper {
+  background-color: var(--zinc-900);
+}
+
+.box {
+  background-color: var(--zinc-800);
+  border: 1px solid var(--zinc-700);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.box-header {
+  background-color: var(--zinc-800);
+  border-bottom: 1px solid var(--zinc-700);
+}
+
+/* Form controls */
+.form-control {
+  background-color: var(--zinc-800);
+  border: 1px solid var(--zinc-600);
+  color: var(--zinc-100);
+}
+
+.form-control:focus {
+  border-color: var(--zinc-500);
+  background-color: var(--zinc-800);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--zinc-700);
+  border-color: var(--zinc-600);
+}
+
+.btn-primary:hover {
+  background-color: var(--zinc-600);
+  border-color: var(--zinc-500);
+}
+
+/* Tables */
+.table > thead > tr > th {
+  background-color: var(--zinc-800);
+  border-bottom: 2px solid var(--zinc-700);
+}
+
+.table > tbody > tr > td {
+  border-top: 1px solid var(--zinc-700);
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: var(--zinc-800);
+}
+
+/* Cards and panels */
+.card, .panel {
+  background-color: var(--zinc-800);
+  border: 1px solid var(--zinc-700);
+}
+
+.card-header, .panel-heading {
+  background-color: var(--zinc-800);
+  border-bottom: 1px solid var(--zinc-700);
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  background-color: var(--zinc-800);
+  border: 1px solid var(--zinc-700);
+}
+
+.dropdown-menu > li > a {
+  color: var(--zinc-200);
+}
+
+.dropdown-menu > li > a:hover {
+  background-color: var(--zinc-700);
+  color: var(--zinc-50);
+}
+
+/* Modal dialogs */
+.modal-content {
+  background-color: var(--zinc-800);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--zinc-700);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--zinc-700);
+}
+
+/* Alerts and notifications */
+.alert {
+  background-color: var(--zinc-800);
+  border: 1px solid var(--zinc-700);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--zinc-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--zinc-700);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zinc-600);
+}

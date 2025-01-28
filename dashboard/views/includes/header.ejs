@@ -1,0 +1,46 @@
+<header class="bg-zinc-800 border-b border-zinc-700 py-2">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center space-x-2">
+        <span class="text-zinc-100 font-bold text-xl">YouPro</span>
+      </a>
+
+      <!-- Right Menu -->
+      <div class="flex items-center space-x-4">
+        <!-- User Menu -->
+        <div class="relative" x-data="{ open: false }">
+          <button 
+            class="flex items-center space-x-2 text-zinc-300 hover:text-zinc-100"
+            @click="open = !open"
+          >
+            <img 
+              src="<%= user.displayAvatar %>" 
+              class="w-8 h-8 rounded-full"
+              alt="User Avatar" 
+            />
+            <span class="hidden md:inline"><%= user.tag %></span>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div 
+            class="absolute right-0 mt-2 w-48 bg-zinc-800 border border-zinc-700 rounded-md shadow-lg"
+            x-show="open"
+            @click.away="open = false"
+            style="display: none;"
+          >
+            <a 
+              href="/logout" 
+              class="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100"
+            >
+              Sign out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Alpine.js for dropdown functionality -->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../includes/head') %>
+  
+  <body class="min-h-screen bg-zinc-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../includes/sidebar') %>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <%- include('../includes/header') %>
+
+        <!-- Page content -->
+        <main class="flex-1 p-6">
+          <div class="max-w-7xl mx-auto">
+            <!-- Page header -->
+            <div class="mb-6">
+              <% if (locals.success) { %>
+                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= success %></span>
+                </div>
+              <% } %>
+              <% if (locals.error) { %>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline"><%= error %></span>
+                </div>
+              <% } %>
+              <h1 class="text-2xl font-bold text-white">Verification Setup</h1>
+              <nav class="flex mt-2 space-x-2 text-sm">
+                <a href="/" class="text-white hover:text-white">
+                  <i class="fa fa-home"></i>
+                  <span class="ml-1">Selector</span>
+                </a>
+                <span class="text-white">/</span>
+                <a href="<%=`/manage/${guild.id}/`%>" class="text-white hover:text-white">
+                  <%=guild.name%>
+                </a>
+                <span class="text-white">/</span>
+                <span class="text-white">Verification</span>
+              </nav>
+            </div>
+
+            <!-- Verification Settings -->
+            <div class="grid grid-cols-1 gap-6">
+              <!-- Basic Settings -->
+              <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-zinc-700 px-4 py-3">
+                  <h3 class="text-lg font-medium text-white">Basic Settings</h3>
+                </div>
+                <form action="/manage/<%= guild.id %>/verification" method="POST">
+                  <div class="p-4 space-y-4">
+                    <!-- Enable Verification -->
+                    <div>
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="verification_enabled"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.verification?.enabled ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Enable Verification System</span>
+                      </label>
+                    </div>
+
+                    <!-- Verification Channel -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Verification Channel</label>
+                      <select 
+                        name="verification_channel"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      >
+                        <option disabled selected value=""> -- select a channel -- </option>
+                        <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                          <option 
+                            value="<%= ch.id %>"
+                            <%= guild.verification?.channel === ch.id ? 'selected' : '' %>
+                          >
+                            #<%= ch.name %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+
+                    <!-- Verified Role -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Verified Role</label>
+                      <select 
+                        name="verification_role"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      >
+                        <option disabled selected value=""> -- select a role -- </option>
+                        <% guild.roles.cache.forEach((role) => { %>
+                          <option 
+                            value="<%= role.id %>"
+                            <%= guild.verification?.role === role.id ? 'selected' : '' %>
+                          >
+                            @<%= role.name %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Verification Message -->
+              <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-zinc-700 px-4 py-3">
+                  <h3 class="text-lg font-medium text-white">Verification Message</h3>
+                </div>
+                <form action="/manage/<%= guild.id %>/verification" method="POST">
+                  <div class="p-4 space-y-4">
+                    <!-- Message Content -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Welcome Message</label>
+                      <textarea 
+                        name="verification_message"
+                        rows="4"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        placeholder="Welcome to the server! Please click the button below to verify..."
+                      ><%= guild.verification?.message || '' %></textarea>
+                    </div>
+
+                    <!-- Button Text -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Button Text</label>
+                      <input 
+                        type="text" 
+                        name="verification_button"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        placeholder="Verify"
+                        value="<%= guild.verification?.button_text || 'Verify' %>"
+                      >
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Verification Requirements -->
+              <div class="bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-zinc-700 px-4 py-3">
+                  <h3 class="text-lg font-medium text-white">Requirements</h3>
+                </div>
+                <form action="/manage/<%= guild.id %>/verification" method="POST">
+                  <div class="p-4 space-y-4">
+                    <!-- Account Age -->
+                    <div>
+                      <label class="block text-sm font-medium text-white mb-1">Minimum Account Age (days)</label>
+                      <input 
+                        type="number" 
+                        name="min_account_age"
+                        class="w-full bg-zinc-700 border border-zinc-600 rounded-md px-3 py-2 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                        placeholder="0"
+                        value="<%= guild.verification?.min_age || 0 %>"
+                      >
+                    </div>
+
+                    <!-- Additional Requirements -->
+                    <div class="space-y-3">
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="require_avatar"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.verification?.require_avatar ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Require Avatar</span>
+                      </label>
+
+                      <label class="flex items-center space-x-3">
+                        <input 
+                          type="checkbox" 
+                          name="require_email"
+                          class="w-4 h-4 bg-zinc-700 border-zinc-600 rounded text-emerald-500 focus:ring-emerald-500"
+                          <%= guild.verification?.require_email ? 'checked' : '' %>
+                        >
+                        <span class="text-white">Require Verified Email</span>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Update Button -->
+              <div class="flex justify-end">
+                <button 
+                  type="submit"
+                  class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+                >
+                  Update Verification Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <%- include('../includes/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

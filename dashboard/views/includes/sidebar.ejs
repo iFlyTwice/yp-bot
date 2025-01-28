@@ -1,0 +1,122 @@
+<aside class="w-64 bg-zinc-800 border-r border-zinc-700 flex-shrink-0">
+  <div class="h-full flex flex-col">
+    <!-- User Panel -->
+    <div class="p-4 border-b border-zinc-700">
+      <div class="flex items-center space-x-3">
+        <img 
+          src="<%= user.displayAvatar %>" 
+          class="w-10 h-10 rounded-full"
+          alt="User Image"
+        >
+        <div>
+          <p class="text-white font-medium"><%= user.username %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="p-4">
+      <form action="/selector" method="get">
+        <div class="relative">
+          <input 
+            type="text" 
+            name="q" 
+            class="w-full bg-zinc-700 text-zinc-100 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-500"
+            placeholder="Search for servers..."
+          >
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fa fa-search text-zinc-400"></i>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-2 py-4 space-y-6">
+      <!-- Servers Management -->
+      <div>
+        <h3 class="px-3 text-xs font-semibold text-white uppercase tracking-wider">
+          Servers Management
+        </h3>
+        <div class="mt-2 space-y-1">
+          <a 
+            href="/selector"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname === '/selector' ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-home w-6 text-white"></i>
+            <span>Selector</span>
+          </a>
+        </div>
+      </div>
+
+      <% if (locals.guild) { %>
+      <!-- Configuration -->
+      <div>
+        <h3 class="px-3 text-xs font-semibold text-white uppercase tracking-wider">
+          Configuration
+        </h3>
+        <div class="mt-2 space-y-1">
+          <a 
+            href="/manage/<%= guild.id %>/basic"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname.includes('/basic') ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-gear w-6 text-white"></i>
+            <span>Basic</span>
+          </a>
+          <a 
+            href="/manage/<%= guild.id %>/greeting"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname.includes('/greeting') ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-bullhorn w-6 text-white"></i>
+            <span>Greeting</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Utility -->
+      <div>
+        <h3 class="px-3 text-xs font-semibold text-white uppercase tracking-wider">
+          Utility
+        </h3>
+        <div class="mt-2 space-y-1">
+          <a 
+            href="/manage/<%= guild.id %>/commands"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname.includes('/commands') ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-gear w-6 text-white"></i>
+            <span>Command Settings</span>
+          </a>
+          <a 
+            href="/manage/<%= guild.id %>/logs"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname.includes('/logs') ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-scroll w-6 text-white"></i>
+            <span>Logs Configuration</span>
+          </a>
+          <a 
+            href="/manage/<%= guild.id %>/verification"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname.includes('/verification') ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-shield w-6 text-white"></i>
+            <span>Verification Setup</span>
+          </a>
+          <a 
+            href="/manage/<%= guild.id %>/custom-commands"
+            class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-white"
+            :class="window.location.pathname.includes('/custom-commands') ? 'bg-zinc-700' : 'hover:bg-zinc-700'"
+          >
+            <i class="fa fa-terminal w-6 text-white"></i>
+            <span>Custom Commands</span>
+          </a>
+        </div>
+      </div>
+      <% } %>
+    </nav>
+  </div>
+</aside>

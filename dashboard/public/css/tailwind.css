@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-zinc-900 text-zinc-100;
+  }
+}
+
+@layer components {
+  .sidebar {
+    @apply bg-zinc-800 border-r border-zinc-700;
+  }
+
+  .nav-link {
+    @apply text-zinc-300 hover:text-zinc-100 hover:bg-zinc-700 px-4 py-2 rounded-md transition-colors;
+  }
+
+  .nav-link.active {
+    @apply bg-zinc-700 text-zinc-100;
+  }
+
+  .btn-primary {
+    @apply bg-zinc-700 hover:bg-zinc-600 text-zinc-100 px-4 py-2 rounded-md transition-colors;
+  }
+
+  .btn-success {
+    @apply bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-md transition-colors;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-md transition-colors;
+  }
+
+  .card {
+    @apply bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg;
+  }
+
+  .card-header {
+    @apply border-b border-zinc-700 px-4 py-3;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  .form-input {
+    @apply bg-zinc-700 border border-zinc-600 text-zinc-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-500;
+  }
+
+  .form-select {
+    @apply bg-zinc-700 border border-zinc-600 text-zinc-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-500;
+  }
+
+  .form-checkbox {
+    @apply rounded border-zinc-600 text-zinc-500 focus:ring-zinc-500;
+  }
+
+  .table {
+    @apply w-full text-left;
+  }
+
+  .table th {
+    @apply bg-zinc-800 text-zinc-300 font-medium px-4 py-2;
+  }
+
+  .table td {
+    @apply border-t border-zinc-700 px-4 py-2;
+  }
+
+  .table tr:hover {
+    @apply bg-zinc-800;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-zinc-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-600;
+}
